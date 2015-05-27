@@ -5,10 +5,13 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 
+import com.gtx.caculate.Caculate;
+import com.gtx.caculate.Point;
 import com.gtx.mosquito.R;
 
 /**
@@ -62,7 +65,14 @@ public class Mosquito extends View
 
     protected void onDraw(Canvas canvas)
     {
-        canvas.drawCircle(100, 100, 90, paint);
-
+        Path path = new Path();
+        path.moveTo(200, 200);
+        for(float t = 0; t < 25; t = t + 0.005f)
+        {
+            Point p = Caculate.getArchimedesPoint(t, 12.0f, 1.0f);
+            //path.lineTo(p.getX(), p.getY());
+            canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+        }
+        //canvas.drawPath(path, paint);
     }
 }
