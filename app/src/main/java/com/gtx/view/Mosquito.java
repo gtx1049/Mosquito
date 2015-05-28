@@ -2,6 +2,7 @@ package com.gtx.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -65,14 +66,20 @@ public class Mosquito extends View
 
     protected void onDraw(Canvas canvas)
     {
-        Path path = new Path();
-        path.moveTo(200, 200);
-        for(float t = 0; t < 25; t = t + 0.005f)
+        Bitmap bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
+
+        for(float t = 0; t < 25; t = t + 0.003f)
         {
-                Point p = Caculate.getArchimedesPoint(t, 12.0f, 1.0f);
-                canvas.drawCircle(p.getX() + 350, p.getY() + 500, 15, paint);
+            for(float k = -10; k < 10; k = k + 0.5f)
+            {
+                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.BLACK);
+            }
 
         }
+
+        canvas.drawBitmap(bitmap, 0, 0, paint);
         //canvas.drawPath(path, paint);
     }
 }
