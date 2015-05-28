@@ -69,9 +69,9 @@ public class Mosquito extends View
         path.moveTo(200, 200);
         for(float t = 0; t < 25; t = t + 0.005f)
         {
-            Point p = Caculate.getArchimedesPoint(t, 12.0f, 1.0f);
-            //path.lineTo(p.getX(), p.getY());
-            canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                Point p = Caculate.getArchimedesPoint(t, 12.0f, 1.0f);
+                canvas.drawCircle(p.getX() + 350, p.getY() + 500, 15, paint);
+
         }
         //canvas.drawPath(path, paint);
     }
