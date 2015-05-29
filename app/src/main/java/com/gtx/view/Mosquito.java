@@ -24,6 +24,10 @@ public class Mosquito extends View
     private float ratio;
     private float radius;
 
+    private float len;
+    private float burn;
+    private float ash;
+
     public Mosquito(Context context)
     {
         super(context);
@@ -50,6 +54,10 @@ public class Mosquito extends View
 
         Log.d("Mosquito", radius + "; radius");
         Log.d("Mosquito", ratio + " ; ratio");
+
+        len = 24.995f;
+        burn = 25f;
+        ash = 25f;
     }
 
     public Mosquito(Context context, AttributeSet attrs, Paint paint)
@@ -66,20 +74,71 @@ public class Mosquito extends View
 
     protected void onDraw(Canvas canvas)
     {
+
         Bitmap bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
 
-        for(float t = 0; t < 25; t = t + 0.003f)
+        for(float t = 0f; t < len; t = t + 0.003f)
         {
-            for(float k = -10; k < 10; k = k + 0.5f)
+            for(float k = -15; k < 15; k = k + 0.5f)
             {
                 Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
                 //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
                 bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.BLACK);
             }
-
         }
+        for(float t = len; t < burn; t = t + 0.003f)
+        {
+            for(float k = -15; k < 15; k = k + 0.5f)
+            {
+                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.RED);
+            }
+        }
+        for(float t = burn; t < ash; t = t + 0.003f)
+        {
+            for(float k = -15; k < 15; k = k + 0.5f)
+            {
+                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.GRAY);
+            }
+        }
+
 
         canvas.drawBitmap(bitmap, 0, 0, paint);
         //canvas.drawPath(path, paint);
+        bitmap.recycle();
+        bitmap = null;
+    }
+
+    public float getBurn()
+    {
+        return burn;
+    }
+
+    public void setBurn(float burn)
+    {
+        this.burn = burn;
+    }
+
+    public float getAsh()
+    {
+        return ash;
+    }
+
+    public void setAsh(float ash)
+    {
+        this.ash = ash;
+    }
+
+    public float getLen()
+    {
+        return len;
+    }
+
+    public void setLen(float len)
+    {
+        this.len = len;
     }
 }

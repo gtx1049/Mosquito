@@ -10,8 +10,13 @@
                 tools:context=".MainActivity">
 
     <com.gtx.view.Mosquito
+        android:id="@+id/mos"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         gtx:radius="2"
         gtx:ratio="2"/>
+    <TextView
+        android:id="@+id/timer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>
