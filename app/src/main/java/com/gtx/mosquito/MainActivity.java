@@ -41,8 +41,10 @@ public class MainActivity extends ActionBarActivity
                 {
                     mosquito.setLen(mosquito.getLen() - 0.001f);
                     mosquito.setBurn(mosquito.getLen() + 0.001f);
+                    //mosquito.setLen(mosquito.getLen() - 0.05f);
+                    //mosquito.setBurn(mosquito.getLen() + 0.05f);
                     mosquito.setAsh(25);
-                    mosquito.invalidate();
+                    mosquito.fresh();
                 }
             }
         };

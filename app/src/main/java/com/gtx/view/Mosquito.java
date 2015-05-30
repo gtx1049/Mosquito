@@ -7,6 +7,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -28,6 +30,9 @@ public class Mosquito extends View
     private float burn;
     private float ash;
 
+    private DrawHandler handler;
+    private Bitmap bitmap;
+
     public Mosquito(Context context)
     {
         super(context);
@@ -36,6 +41,8 @@ public class Mosquito extends View
         paint.setStrokeJoin(Paint.Join.ROUND);
         paint.setStrokeCap(Paint.Cap.ROUND);
         paint.setStrokeWidth(3);
+
+        handler = new DrawHandler();
     }
 
     public Mosquito(Context context, AttributeSet attrs)
@@ -58,6 +65,8 @@ public class Mosquito extends View
         len = 24.995f;
         burn = 25f;
         ash = 25f;
+
+        handler = new DrawHandler();
     }
 
     public Mosquito(Context context, AttributeSet attrs, Paint paint)
@@ -74,42 +83,18 @@ public class Mosquito extends View
 
     protected void onDraw(Canvas canvas)
     {
-
-        Bitmap bitmap = Bitmap.createBitmap(this.getWidth(), this.getHeight(), Bitmap.Config.ARGB_8888);
-
-        for(float t = 0f; t < len; t = t + 0.003f)
+        if(bitmap != null)
         {
-            for(float k = -15; k < 15; k = k + 0.5f)
-            {
-                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
-                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
-                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.BLACK);
-            }
+            canvas.drawBitmap(bitmap, 0, 0, paint);
+            //canvas.drawPath(path, paint);
+            bitmap.recycle();
+            bitmap = null;
         }
-        for(float t = len; t < burn; t = t + 0.003f)
-        {
-            for(float k = -15; k < 15; k = k + 0.5f)
-            {
-                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
-                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
-                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.RED);
-            }
-        }
-        for(float t = burn; t < ash; t = t + 0.003f)
-        {
-            for(float k = -15; k < 15; k = k + 0.5f)
-            {
-                Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
-                //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
-                bitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.GRAY);
-            }
-        }
+    }
 
-
-        canvas.drawBitmap(bitmap, 0, 0, paint);
-        //canvas.drawPath(path, paint);
-        bitmap.recycle();
-        bitmap = null;
+    public void fresh()
+    {
+        new DrawThread().start();
     }
 
     public float getBurn()
@@ -140,5 +125,59 @@ public class Mosquito extends View
     public void setLen(float len)
     {
         this.len = len;
+    }
+
+    public class DrawHandler extends Handler
+    {
+        @Override
+        public void handleMessage(Message msg)
+        {
+            bitmap = (Bitmap)msg.obj;
+            Mosquito.this.invalidate();
+        }
+    }
+
+    public class DrawThread extends Thread
+    {
+        @Override
+        public void run()
+        {
+            if(Mosquito.this.getWidth() > 0 && Mosquito.this.getHeight() > 0)
+            {
+                Bitmap localbitmap = Bitmap.createBitmap(Mosquito.this.getWidth(), Mosquito.this.getHeight(), Bitmap.Config.ARGB_8888);
+
+                for (float t = 0f; t < len; t = t + 0.003f)
+                {
+                    for (float k = -15; k < 15; k = k + 0.5f)
+                    {
+                        Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                        //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                        localbitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.BLACK);
+                    }
+                }
+                for (float t = len; t < burn; t = t + 0.003f)
+                {
+                    for (float k = -15; k < 15; k = k + 0.5f)
+                    {
+                        Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                        //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                        localbitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.RED);
+                    }
+                }
+                for (float t = burn; t < ash; t = t + 0.003f)
+                {
+                    for (float k = -15; k < 15; k = k + 0.5f)
+                    {
+                        Point p = Caculate.getArchimedesPoint(t, 12.0f, k);
+                        //canvas.drawPoint(p.getX() + 350, p.getY() + 500, paint);
+                        localbitmap.setPixel(p.getX() + 325, p.getY() + 350, Color.GRAY);
+                    }
+                }
+
+                Message msg = new Message();
+                msg.obj = localbitmap;
+                handler.sendMessage(msg);
+            }
+        }
     }
 }
